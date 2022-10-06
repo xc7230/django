@@ -15,16 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-import test1.views
+import board.views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('qwert/', test1.views.asdf),
-    path('input_page/', test1.views.input_page),
-    path('get_data/', test1.views.get_data_func),
-    path('get_data2/', test1.views.get_data_func2),
-    path('login/', test1.views.login_input_page),
-    path('login/', test1.views.logininfo),
-
-    path('account/', test1.views.logininfo),
+    path('board/create/', board.views.create),
+    path('board/read/', board.views.read),
+    path('board/update/', board.views.update),
+    path('board/delete/', board.views.delete),
+    path('board/list/', board.views.list),
 
 ]

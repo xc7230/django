@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        아이디<br/>
+        <input type="text" name="userid"> <br>
+        패스워드<br/>
+        <input type="text" name="userpw">
+        <button>보내기</button>
+    </form>
+</body>
+</html>

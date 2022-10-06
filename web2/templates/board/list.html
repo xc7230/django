@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <br>
+    POST create 함수
+    <form action="/board/create/" method="post">
+      {% csrf_token %}
+      <input type="text" name="title"> <br>
+      <input type="text" name="contents">
+      <button>게시글 작성</button>
+    </form>
+    <br>
+    <br>
+    GET read 함수
+    <a href="/board/read?num=1">1번 게시글 조회</a>
+    <br>
+    <br>
+    GET update 함수
+    <a href="/board/update?num=1">1번 게시글 수정</a>
+    <br>
+    <br>
+    POST update 함수
+    <form action="/board/update/" method="post">
+        {% csrf_token %}
+        <input type="text" name="title"> <br>
+        <input type="text" name="contents">
+        <button>게시글 수정</button>
+
+    </form>
+    <br>
+    <br>
+    GET delete 함수
+    <a href="/board/delete?num=1">1번 게시글 삭제</a>
+</body>
+</html>

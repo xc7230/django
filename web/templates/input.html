@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+      GET 방식으로 요청
+      <a href="/get_data?num1=10&num2=20">보내기</a> <br>
+
+      POST 방식으로 요청
+      <form action="/get_data/" method="post">
+          {% csrf_token %}
+          <input type="text" name="num1"> <br>
+          <input type="text" name="num2">
+          <button>보내기</button>
+      </form>
+      데이터 입력
+      <form action="/get_data2/" method="post">
+          {% csrf_token %}
+          title<br>
+          <input type="text" name="title"> <br>
+          contents<br>
+          <input type="text" name="contents">
+          <button>보내기</button>
+      </form>
+</body>
+</html>
