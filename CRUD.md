@@ -94,7 +94,7 @@ python manage.py migrate
 ![image](./image/crud/7.png)<br/>
 
 ## 게시판 만들기
-1. DB에 게시판 테이블 생성<br/>
+### DB에 게시판 테이블 생성
 ` board/models.py `에 다음 명령어 추가<br/>
 ```python
 class Board(models.Model):
@@ -125,5 +125,173 @@ class BoardForm(forms.ModelForm):
         fields = ('title', 'contents')
 ```
 
+## 게시판 Create 만들기
+- 앱폴더에 ` board/views.py `
+```python
+from board.forms import BoardForm
+from django.shortcuts import redirect
+
+def create(request):
+    if request.method == "GET":
+        boardForm = BoardForm()
+        return render(request, 'board/create.html', {'boardForm' : boardForm})
+    else:
+        boardForm = BoardForm(request.POST)
+
+        if boardForm.is_valid():
+            board = boardForm.save(commit=False)
+            board.save()
+            return redirect('/board/list/')
+```
+
+- config 폴더에 `urls.py`
+```python
+import board.views
+
+
+urlpatterns = [
+    path('board/create', board.views.create), #추가
+]
+```
+
+- templates 폴더에 `create.html`작성<br/>
+```html
+<body>
+<form method="POST">
+  {% csrf_token %}
+  {{ boardForm }}
+  <input type="submit" value="작성">
+</form>
+</body>
+```
+
+- 확인<br/>
+![image](./image/crud/10.png)<br/>
+
+## 게시판 List 만들기
+ - 앱폴더에 ` board/views.py `
+```python
+def list(request):
+    posts = Board.objects.all().order_by('-id')
+
+    return render(request, 'board/list.html', {'posts': posts})
+```
+
+- config 폴더에 `urls.py`
+```python
+    path('board/list/', board.views.list), #추가
+```
+- templates 폴더에 `list.html`작성<br/>
+```html
+<body>
+    <table>
+        <thead>
+            <th>글 번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+        </thead>
+
+        {% if posts %}
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.create_date }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+</body>
+```
+
+- 확인<br/>
+![image](./image/crud/11.png)<br/>
+
+
+## 게시판 Read 만들기
+- 앱폴더에 ` board/views.py `
+```python
+def read(request, num):
+    post = Board.objects.get(Q(id=num))
+
+    return render(request, 'board/read.html', {'post':post})
+```
+
+- config 폴더에 `urls.py`
+```python
+    path('board/read/<int:num>', board.views.read), #추가
+```
+
+- templates 폴더에 `read.html`작성<br/>
+```html
+<table>
+        <thead>
+            <th>글 번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+        </thead>
+
+        {% if post %}
+
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.contents }}</td>
+                    <td>{{ post.create_date }}</td>
+                </tr>
+
+        {% endif %}
+    </table>
+```
+
+- 확인<br/>
+![image](./image/crud/12.png)<br/>
+
+## 게시판 Delete 만들기
+- 앱폴더에 ` board/views.py `
+```python
+def delete(request, num):
+    post = Board.objects.get(Q(id=num))
+    post.delete()
+    return redirect('/board/list/')
+```
+- config 폴더에 `urls.py`
+```python
+    path('board/delete/<int:num>', board.views.delete), #추가
+```
+
+## 게시판 Update 만들기
+- 앱폴더에 ` board/views.py `
+```python
+def update(request, num):
+    post = Board.objects.get(Q(id=num))
+    if request.method == 'GET':
+        boardForm = BoardForm(instance = post)
+        return render(request, 'board/update.html', {"boardForm":boardForm})
+    else:
+        boardForm = BoardForm(request.POST)
+
+        if boardForm.is_valid():
+            post.title = boardForm.cleaned_data['title']
+            post.contents = boardForm.cleaned_data['contents']
+            post.save()
+            return redirect("/board/read/"+str(post.id))
+```
+- config 폴더에 `urls.py`
+```python
+    path('board/update/<int:num>', board.views.update),
+```
+- templates 폴더에 `update.html`작성<br/>
+```html
+<form method="post">
+  {% csrf_token %}
+  {{ boardForm }}
+  <button>수정</button>
+</form>
+```
+- 확인<br/>
+![image](./image/crud/13.png)<br/>
+![image](./image/crud/14.png)<br/>
+![image](./image/crud/15.png)<br/>
 
 

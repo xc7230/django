@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import board.views
+import user.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,8 @@ urlpatterns = [
     path('board/update/<int:num>', board.views.update),
     path('board/delete/<int:num>', board.views.delete),
     path('board/list/', board.views.list),
+    path('user/signup/', user.views.signup),
+    path('user/login', user.views.login),
+    path('user/logout', user.views.logout),
+
 ]
