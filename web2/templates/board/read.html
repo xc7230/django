@@ -5,6 +5,23 @@
     <title>Title</title>
 </head>
 <body>
-이건 read파일 입니다.
+<table>
+        <thead>
+            <th>글 번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+        </thead>
+
+        {% if post %}
+
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.contents }}</td>
+                    <td>{{ post.create_date }}</td>
+                </tr>
+
+        {% endif %}
+    </table>
 </body>
 </html>

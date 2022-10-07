@@ -19,10 +19,9 @@ import board.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('board/create/', board.views.create),
-    path('board/read/', board.views.read),
-    path('board/update/', board.views.update),
-    path('board/delete/', board.views.delete),
+    path('board/create', board.views.create),
+    path('board/read/<int:num>', board.views.read),
+    path('board/update/<int:num>', board.views.update),
+    path('board/delete/<int:num>', board.views.delete),
     path('board/list/', board.views.list),
-
 ]

@@ -1,38 +1,46 @@
 from django.shortcuts import render
+from board.forms import BoardForm
+from django.shortcuts import redirect
+from board.models import Board
+from django.db.models import Q
 
 # Create your views here.
 def create(request):
-    title = request.POST.get('title', None)
-    contents = request.POST.get('contents', None)
-    print(title)
-    print(contents)
-    return render(request, 'board/result.html')
-
-def read(request):
-    num = request.GET.get('num', None)
-
-    print("read 입니다.")
-    return render(request, 'board/read.html')
-
-def update(request):
-    if request.method == 'GET':
-        num = request.GET.get('num', None)
-        print(num)
+    if request.method == "GET":
+        boardForm = BoardForm()
+        return render(request, 'board/create.html', {'boardForm' : boardForm})
     else:
-        title = request.POST.get('title', None)
-        contents = request.POST.get('contents', None)
-        print(title)
-        print(contents)
+        boardForm = BoardForm(request.POST)
 
-    print("update 입니다.")
-    return render(request, 'board/result.html')
+        if boardForm.is_valid():
+            board = boardForm.save(commit=False)
+            board.save()
+            return redirect('/board/list')
 
-def delete(request):
-    num = request.GET.get('num', None)
-    print(num)
-    print("delete 입니다.")
-    return render(request, 'board/result.html')
+def read(request, num):
+    post = Board.objects.get(Q(id=num))
+
+    return render(request, 'board/read.html', {'post':post})
+
+def update(request, num):
+    post = Board.objects.get(Q(id=num))
+    if request.method == 'GET':
+        boardForm = BoardForm(instance = post)
+        return render(request, 'board/update.html', {"boardForm":boardForm})
+    else:
+        boardForm = BoardForm(request.POST)
+
+        if boardForm.is_valid():
+            post.title = boardForm.cleaned_data['title']
+            post.contents = boardForm.cleaned_data['contents']
+            post.save()
+            return redirect("/board/read/"+str(post.id))
+def delete(request, num):
+    post = Board.objects.get(Q(id=num))
+    post.delete()
+    return redirect('/board/list/')
 
 def list(request):
-    print("list 입니다.")
-    return render(request, 'board/list.html')
+    posts = Board.objects.all().order_by('-id')
+
+    return render(request, 'board/list.html', {'posts': posts})
