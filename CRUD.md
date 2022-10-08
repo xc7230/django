@@ -48,6 +48,8 @@ DATABASES = {
 ```
 
 ```shell
+pip install mysqlclient
+
 python manage.py migrate
 ```
 ![image](./image/crud/3.png)<br/>
@@ -58,8 +60,13 @@ python manage.py migrate
 내가 생성한 DB에 Django의 테이블이 생성된걸 확인 할 수 있다.<br/>
 
 6. 테이블 생성해보기(연습)<br/>
+```shell
+django-admin startapp board # 앱폴더 생성
+```
 ` board/models.py `에 다음 명령어 추가<br/>
 ```python
+from django.db import models
+
 class Fruits(models.Model):
     name = models.CharField(max_length=50)
     descript = models.TextField()
