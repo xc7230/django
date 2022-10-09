@@ -13,23 +13,25 @@
 <div class="form signup">
   <div class="form-header">
     <div class="show-signup">Sign In</div>
-    <div class="show-signin"><a href="/user/signup" style="text-decoration:none; color:white">Sign Up</a></div>
+    <div class="show-signin">Sign Up</div>
+    <div class="show-reset">Reset</div>
   </div>
-    <form method="POST">
-    {% csrf_token %}
+  <div class="arrow"></div>
   <div class="form-elements">
     <div class="form-element">
-      <input type="text" placeholder="Username" id="{{ loginForm.username }}" >
+      <input type="text" placeholder="Username">
     </div>
     <div class="form-element">
-      <input type="password" placeholder="Password" id="{{ loginForm.password }}" >
+      <input type="password" placeholder="Password">
+    </div>
+    <div class="form-element">
+      <input type="password" placeholder="Confirm password">
     </div>
     <div class="form-element">
       <button id="submit-btn">Sign In</button>
     </div>
   </div>
-   </form>
 </div>
-<script src="js/style.js"></script>
+
 </body>
 </html>
