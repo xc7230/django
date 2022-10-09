@@ -132,6 +132,28 @@ class BoardForm(forms.ModelForm):
         fields = ('title', 'contents')
 ```
 
+- html 파일 관리<br/>
+프로젝트 디렉토리 밑에 ` templates ` 디렉토리 생성<br/>
+![image](./image/crud/32.png)<br/>
+`config/settings.py`에 추가<br/>
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR/'templates'], # 추가
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+```
+
 ## 게시판 Create 만들기
 - 앱폴더에 ` board/views.py `
 ```python
@@ -161,7 +183,8 @@ urlpatterns = [
 ]
 ```
 
-- templates 폴더에 `create.html`작성<br/>
+- templates 폴더에 board 디렉토리 생성 후 `create.html`작성<br/>
+![image](./image/crud/33.png)<br/>
 ```html
 <body>
 <form method="POST">
@@ -178,6 +201,8 @@ urlpatterns = [
 ## 게시판 List 만들기
  - 앱폴더에 ` board/views.py `
 ```python
+from board.models import Board  # 추가
+
 def list(request):
     posts = Board.objects.all().order_by('-id')
 
@@ -188,7 +213,7 @@ def list(request):
 ```python
     path('board/list/', board.views.list), #추가
 ```
-- templates 폴더에 `list.html`작성<br/>
+- templates 폴더에 `board/list.html`작성<br/>
 ```html
 <body>
     <table>
@@ -218,6 +243,8 @@ def list(request):
 ## 게시판 Read 만들기
 - 앱폴더에 ` board/views.py `
 ```python
+from django.db.models import Q  # 추가
+
 def read(request, num):
     post = Board.objects.get(Q(id=num))
 
@@ -226,7 +253,7 @@ def read(request, num):
 
 - config 폴더에 `urls.py`
 ```python
-    path('board/read/<int:num>', board.views.read), #추가
+    path('board/read/<int:num>', board.views.read), # 추가
 ```
 
 - templates 폴더에 `read.html`작성<br/>
@@ -335,7 +362,8 @@ urlpatterns = [
 ]
 ```
 
-- templates 폴더에 `user/signup.html`생성<br/>
+- templates 폴더에 `user` 디렉토리 생성 후 `user/signup.html`생성<br/>
+![image](./image/crud/34.png)<br/>
 ```html
 <body>
 <h1>회원가입</h1>
@@ -378,7 +406,7 @@ def login(request):
     path('user/login', user.views.login),   # 추가
 ```
 
-- templates 폴더에 `user/signup.html`생성<br/>
+- templates 폴더에 `user/login.html`생성<br/>
 ```html
 <body>
 <h1>로그인</h1>
@@ -417,12 +445,14 @@ def logout(request):
 - 모델 수정
 `board/models.py` 수정하기
 ```python
+from django.contrib.auth.models import User # 추가
+
 class Board(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE)  # 추가
     title = models.CharField(max_length=200)
     contents = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
-    def __str__(self): return self.title    # 수정
+    def __str__(self): return self.title
 ```
 - 마이그레이션
 ```shell
@@ -451,6 +481,7 @@ from django.contrib.auth.decorators import login_required   # 추가
 ![image](./image/crud/24.png)<br/>
 ![image](./image/crud/25.png)<br/>
 create에 접속하려고 하면 로그인 페이지로 이동된다. update와 delete에도 다음 설정을 해준다.<br/>
+![image](./image/crud/35.png)<br/>
 
 ### 회원만 게시글 작성하게 만들기
 - 앱폴더에 ` board/views.py `
