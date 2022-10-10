@@ -3,40 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+
 </head>
 <body>
-    <table>
-        <thead>
-            <th>글 번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일시</th>
-        </thead>
 
+
+{% block content %}
+<div class="row mt-5">
+  <div class="col-12">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">글 번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">아이디</th>
+          <th scope="col">작성일</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
         {% if posts %}
             {% for post in posts %}
                 <tr>
                     <td>{{ post.id }}</td>
-                    <td>{{ post.title }}</td>
+                    <td><a href="/board/read/{{post.id}}">{{ post.title }} </td>
                     <td>{{ post.writer }}</td>
                     <td>{{ post.create_date }}</td>
                 </tr>
 
-                <tr>
-                    {% if request.user == post.writer %}
-                    <td><a href="/board/update/{{post.id}}">
-                        <button>수정</button>
-                    </a></td>
-                    <td><a href="/board/delete/{{post.id}}">
-                        <button>삭제</button>
-                    </a></td>
-                    {% endif %}
-                    <td><a href="/board/list/">
-                        <button>목록</button>
-                    </a></td>
-                </tr>
             {% endfor %}
         {% endif %}
+        </tr>
+        </tbody>
     </table>
-</body>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+      <a href="/board/create">
+    <button class="btn btn-primary" >글쓰기</button>
+  </div>
+</div>
+{% endblock %}
 </html>

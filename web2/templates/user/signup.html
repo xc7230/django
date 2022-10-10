@@ -16,20 +16,23 @@
     <div class="show-signup" style = "color: #f1575b">Sign Up</div>
   </div>
 
+<form method="POST">
+    {% csrf_token %}
   <div class="form-elements">
     <div class="form-element">
-      <input type="text" placeholder="Username">
+      <input type="text" placeholder="Username" id="{{ signupForm.username }}">
     </div>
     <div class="form-element">
-      <input type="password" placeholder="Password">
+      <input type="password" placeholder="Password" id="{{ signupForm.password1 }}">
     </div>
     <div class="form-element">
-      <input type="password" placeholder="Confirm password">
+      <input type="password" placeholder="Confirm password" id="{{ signupForm.password2 }}">
     </div>
     <div class="form-element">
-      <button id="submit-btn">Sign In</button>
+      <button id="submit-btn">Sign Up</button>
     </div>
   </div>
+</form>
 </div>
 
 </body>
