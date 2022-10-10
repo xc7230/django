@@ -11,9 +11,9 @@
 	<form method="POST">
     {% csrf_token %}
     <label for="id_title">Title:</label><br/>
-        {{ boardForm.title }}
+        {{ boardForm.title }}<br/>
     <label for="id_contents">Contents:</label><br/>
-        {{ boardForm.contents }}
+        {{ boardForm.contents }}<br/>
 	  <input class="btn btn-dark rounded-pill col-12" type="submit" value="작성하기">
   </form>
 </div>

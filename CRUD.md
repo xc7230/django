@@ -614,5 +614,253 @@ STATICFILES_DIRS = [
 ```
 ![image](./image/crud/30.png)<br/>
 
-- 프로젝트 디렉토리 안에 static디렉토리 생성<br/>
+- 프로젝트 디렉토리 안에 static디렉토리 생성, 이 곳에 css파일을 집어넣는다.<br/>
 ![image](./image/crud/31.png)<br/>
+
+### 로그인 화면 꾸미기
+static 디렉토리에 css 디렉토리를 만들고 그 안에 인터넷에서 찾은 css를 집어넣는다.<br/>
+![image](./image/crud/36.png)<br/>
+
+- 적용<br/>
+` user/login.html` 파일을 수정해준다.
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}   <!--추가 static에 넣어놨던 템플릿을 사용한다. -->
+    <link rel="stylesheet" href="{% static "css/style.css" %}"> <!--추가 css디렉토리 안에 style.css를 사용한다. -->
+</head>
+<body>
+<div class="form signup">
+  <div class="form-header">
+    <div class="show-signup">Sign In</div>
+    <div class="show-signin"><a href="/user/signup" style="text-decoration:none; color:white">Sign Up</a></div>
+  </div>
+    <form method="POST">
+    {% csrf_token %}
+  <div class="form-elements">
+    <div class="form-element">
+      <input type="text" placeholder="Username" id="{{ loginForm.username }}" >    <!--로그인 폼 유져네임 -->
+    </div>
+    <div class="form-element">
+      <input type="password" placeholder="Password" id="{{ loginForm.password }}" > <!--로그인 폼 패스워드 -->
+    </div>
+    <div class="form-element">
+      <button id="submit-btn">Sign In</button>
+    </div>
+  </div>
+   </form>
+</div>
+<script src="js/style.js"></script>
+</body>
+```
+- 확인<br/>
+![image](./image/crud/37.png)<br/>
+
+### 회원가입 화면 꾸미기
+` user/signup.html `
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <script src="js/style.js"></script>
+
+
+</head>
+<body>
+<div class="form signup">
+  <div class="form-header">
+    <div class="show-signin"><a href="/user/login" style="text-decoration:none; color:white">Sign In</a></div>
+    <div class="show-signup" style = "color: #f1575b">Sign Up</div>
+  </div>
+
+<form method="POST">
+    {% csrf_token %}
+  <div class="form-elements">
+    <div class="form-element">
+      <input type="text" placeholder="Username" id="{{ signupForm.username }}">
+    </div>
+    <div class="form-element">
+      <input type="password" placeholder="Password" id="{{ signupForm.password1 }}">
+    </div>
+    <div class="form-element">
+      <input type="password" placeholder="Confirm password" id="{{ signupForm.password2 }}">
+    </div>
+    <div class="form-element">
+      <button id="submit-btn">Sign Up</button>
+    </div>
+  </div>
+</form>
+</div>
+
+</body>
+```
+
+- 확인<br/>
+![image](./image/crud/38.png)<br/>
+
+### 게시글 리스트 꾸미기
+` board/list.html `
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}"> <!-- 새로운 css -->
+
+</head>
+<body>
+{% block content %}
+<div class="row mt-5">
+  <div class="col-12">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">글 번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">아이디</th>
+          <th scope="col">작성일</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+        {% if posts %}
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td><a href="/board/read/{{post.id}}">{{ post.title }} </td>
+                    <td>{{ post.writer }}</td>
+                    <td>{{ post.create_date }}</td>
+                </tr>
+
+            {% endfor %}
+        {% endif %}
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+      <a href="/board/create">
+    <button class="btn btn-primary" >글쓰기</button>
+  </div>
+</div>
+{% endblock %}
+```
+- 확인<br/>
+![image](./image/crud/39.png)<br/>
+
+### 게시글 작성 꾸미기
+` board/create.html `
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+</head>
+<body>
+<div class="container" style="max-width:500px;">
+	<form method="POST">
+    {% csrf_token %}
+    <label for="id_title">Title:</label><br/>
+        {{ boardForm.title }}
+    <label for="id_contents">Contents:</label><br/>
+        {{ boardForm.contents }}
+	  <input class="btn btn-dark rounded-pill col-12" type="submit" value="작성하기">
+  </form>
+</div>
+</body>
+```
+- 확인<br/>
+![image](./image/crud/40.png)<br/>
+
+### 게시글 상세 보기 꾸미기
+`board/read.html`
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+</head>
+<body>
+{% block content %}
+<div class="row mt-5">
+  <div class="col-12">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">글 번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">아이디</th>
+          <th scope="col">작성일</th>
+          <th scope="col">내용</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+        {% if post %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }} </td>
+                    <td>{{ post.writer }}</td>
+                    <td>{{ post.create_date }}</td>
+                    <td>{{ post.contents }}</td>
+                </tr>
+        {% endif %}
+        </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+{% if request.user == post.writer %}
+<div class="row">
+  <div class="col-12">
+      <a href="/board/update/{{post.id}}">
+    <button class="btn btn-primary" >수정</button>
+      <a href="/board/delete/{{post.id}}">
+    <button class="btn btn-primary" >삭제</button>
+      <a href="/board/list/">
+    <button class="btn btn-primary" >목록</button>
+  </div>
+
+</div>
+{% endif %}
+{% endblock %}
+</body>
+```
+- 확인<br/>
+![image](./image/crud/41.png)<br/>
+
+### 게시글 수정 꾸미기
+`board/update.html`
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+</head>
+<body>
+<div class="container" style="max-width:500px;">
+   <form method="POST">
+       {% csrf_token %}
+    <label for="id_title">Title:</label><br/>
+        {{ boardForm.title }}
+    <label for="id_contents">Contents:</label><br/>
+        {{ boardForm.contents }}
+	  <input class="btn btn-dark rounded-pill col-12" type="submit" value="수정하기">
+  </form>
+</div>
+</body>
+```
+- 확인<br/>
+![image](./image/crud/42.png)<br/>
+
+
